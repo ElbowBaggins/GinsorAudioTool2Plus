@@ -1,6 +1,8 @@
 # GinsorAudioTool2Plus
 Ginsor's Audio Tool 2 for Destiny, now with less bullshit!
 
+![We're back!](https://thumbs.gfycat.com/VeneratedEvenArabianwildcat-size_restricted.gif)
+
 # Copyright and License Disclaimer
 The original version of Ginsor's Audio Tool links against the GPL3 library 'WEMSharp' and is sufficiently dependent on it that the tool itself is considered a "Modified Version" under the GPL3 as well:
 
