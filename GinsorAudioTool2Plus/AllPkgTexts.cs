@@ -90,23 +90,25 @@ namespace GinsorAudioTool2Plus
       {
       }
 
-      internal void GenerateList0(PkgListEntry pkgListEntry)
-      {
-        PkgStream item = PkgStream.PkgStreamFromFile(string.Concat(new string[]
-        {
+            internal void GenerateList0(PkgListEntry pkgListEntry)
+            {
+
+                PkgStream item = PkgStream.PkgStreamFromFile(string.Concat(new string[]
+                {
           this.D2PkgDir,
           pkgListEntry.Basename,
           "_",
           pkgListEntry.PatchId.ToString(""),
           ".pkg"
-        }));
-        List<PkgStream> list = this.PkgStreamList;
-        List<PkgStream> obj = list;
-        lock (obj)
-        {
-          list.Add(item);
-        }
-      }
+                }));
+                List<PkgStream> list = this.PkgStreamList;
+                List<PkgStream> obj = list;
+                lock (obj)
+                {
+                    list.Add(item);
+                }
+
+            }
 
       public string D2PkgDir;
 

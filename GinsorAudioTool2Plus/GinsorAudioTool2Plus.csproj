@@ -155,6 +155,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -167,7 +168,7 @@
     <None Include="Resources\CodeBook.dat" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\source\repos\GinsorAudioTool2Plus\Revorb\Revorb.vcxproj">
+    <ProjectReference Include="..\Revorb\Revorb.vcxproj">
       <Project>{33052463-ae24-408c-84f2-7ab5aaab78e3}</Project>
       <Name>Revorb</Name>
     </ProjectReference>
@@ -201,7 +202,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="oo2core_3_win64.dll">
+    <None Include="oo2core_8_win64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

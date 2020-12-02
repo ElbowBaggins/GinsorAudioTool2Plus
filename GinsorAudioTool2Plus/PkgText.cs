@@ -323,53 +323,62 @@ namespace GinsorAudioTool2Plus
     {
       uint num = 0U;
       int num2 = 0;
-      foreach (List<EntryMeta> list in this._allEntryMetas)
-      {
-        num2++;
-        if (num2 == 0x69)
-        {
-          Helpers.FileExistsDelete("extracted/atextcount.log");
-        }
-        string text = "";
-        foreach (EntryMeta entryMeta in list)
-        {
-          this._d2TextMs.Seek((long)((ulong)entryMeta.OffsetTs), SeekOrigin.Begin);
-          byte[] array = new byte[entryMeta.ReadLength];
-          this._d2TextMs.Read(array, 0, entryMeta.ReadLength);
-          if (entryMeta.Obfuscator == 0xE142)
-          {
-            text += "[Arc Kill]";
-          }
-          else if (entryMeta.Obfuscator == 0xE13F)
-          {
-            text += "[Solar Kill]";
-          }
-          else if (entryMeta.Obfuscator == 0xE143)
-          {
-            text += "[Void Kill]";
-          }
-          else
-          {
-            try
+            foreach (List<EntryMeta> list in this._allEntryMetas)
             {
-              text += PkgText.D2TextEncoding(array, entryMeta.Obfuscator);
+                num2++;
+                if (num2 == 0x69)
+                {
+                    Helpers.FileExistsDelete("extracted/atextcount.log");
+                }
+                string text = "";
+                foreach (EntryMeta entryMeta in list)
+                {
+                    this._d2TextMs.Seek((long)((ulong)entryMeta.OffsetTs), SeekOrigin.Begin);
+                    byte[] array = new byte[entryMeta.ReadLength];
+                    this._d2TextMs.Read(array, 0, entryMeta.ReadLength);
+                    if (entryMeta.Obfuscator == 0xE142)
+                    {
+                        text += "[Arc Kill]";
+                    }
+                    else if (entryMeta.Obfuscator == 0xE13F)
+                    {
+                        text += "[Solar Kill]";
+                    }
+                    else if (entryMeta.Obfuscator == 0xE143)
+                    {
+                        text += "[Void Kill]";
+                    }
+                    else
+                    {
+                        try
+                        {
+                            text += PkgText.D2TextEncoding(array, entryMeta.Obfuscator);
+                        }
+                        catch (Exception)
+                        {
+                            text += "GinsorTool.Error";
+                        }
+                    }
+                }
+                TextResult item;
+                if (!this._d2TextParam.StringHashList.ContainsKey(num))
+                {
+                    continue;
+                }
+                item = new TextResult
+                {
+                    TextRefHash = Helpers.InvertUint32(this._pkgFile.Filehash),
+
+                    StringHash = this._d2TextParam.StringHashList[num],
+
+                    StringText = text
+                };
+
+                this._textResults.Add(item);
+                this._stringListWithIds.Add("[" + Helpers.InvertUint32(this._d2TextParam.StringHashList[num]).ToString("X8") + "]: " + text);
+
+                num += 1U;
             }
-            catch (Exception)
-            {
-              text += "GinsorTool.Error";
-            }
-          }
-        }
-        TextResult item = new TextResult
-        {
-          TextRefHash = Helpers.InvertUint32(this._pkgFile.Filehash),
-          StringHash = this._d2TextParam.StringHashList[num],
-          StringText = text
-        };
-        this._textResults.Add(item);
-        this._stringListWithIds.Add("[" + Helpers.InvertUint32(this._d2TextParam.StringHashList[num]).ToString("X8") + "]: " + text);
-        num += 1U;
-      }
     }
 
     public static string D2TextEncoding(byte[] unobf, uint obf)
@@ -546,6 +555,7 @@ namespace GinsorAudioTool2Plus
         PkgStream = pkgStream,
         TextInstance = this
       };
+
       Parallel.ForEach<PkgEntry>(getFilesHelper.PkgStream.PkgEntryList, new Action<PkgEntry>(getFilesHelper.GetFiles0));
       return this._d2Files;
     }
@@ -561,8 +571,9 @@ namespace GinsorAudioTool2Plus
             TextInstance = this,
             PkgStream = enumerator.Current
           };
-          Parallel.ForEach<PkgEntry>(getFilesHelper.PkgStream.PkgEntryList, new Action<PkgEntry>(getFilesHelper.GetFiles0));
-        }
+   
+                    Parallel.ForEach<PkgEntry>(getFilesHelper.PkgStream.PkgEntryList, new Action<PkgEntry>(getFilesHelper.GetFiles0));
+                }
       }
       return this._d2Files;
     }

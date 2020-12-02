@@ -229,11 +229,11 @@ namespace GinsorAudioTool2Plus
         0x22U
       },
       {
-        0x80809A8AU,
+        0x808099F1U,
         0x30U
       },
       {
-        0x80809A88U,
+        0x808099EFU,
         0x31U
       },
       {
@@ -505,7 +505,7 @@ namespace GinsorAudioTool2Plus
         0x80U
       },
       {
-        0x80808D54U,
+        0x808097B8U,
         0x90U
       },
       {

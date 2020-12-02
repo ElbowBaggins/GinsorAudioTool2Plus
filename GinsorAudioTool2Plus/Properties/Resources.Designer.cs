@@ -113,9 +113,9 @@ namespace GinsorAudioTool2Plus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] oo2core_3_win64 {
+        internal static byte[] oo2core_8_win64 {
             get {
-                object obj = ResourceManager.GetObject("oo2core_3_win64", resourceCulture);
+                object obj = ResourceManager.GetObject("oo2core_8_win64", resourceCulture);
                 return ((byte[])(obj));
             }
         }

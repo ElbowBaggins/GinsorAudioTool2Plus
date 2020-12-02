@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -123,15 +124,16 @@ namespace GinsorAudioTool2Plus
       }
     }
 
-    private void Loop(uint initialPointer)
+        private void Loop(uint initialPointer)
     {
       this._vcms.Seek((long)((ulong)(initialPointer - 4U)), SeekOrigin.Begin);
       uint num = Helpers.ReadUInt(this._vcms);
-      if (num == this._specialClassHash)
-      {
+
+    if (num == this._specialClassHash)
+    {
         this.SpecialClassCase(initialPointer);
         return;
-      }
+    }
       if (num == this._arrayClassHash)
       {
         this._vcms.Seek((long)((ulong)(initialPointer + 0x20U)), SeekOrigin.Begin);
@@ -141,7 +143,7 @@ namespace GinsorAudioTool2Plus
         this._vcms.Seek((long)((ulong)num3), SeekOrigin.Begin);
         for (uint num4 = 0U; num4 < num2; num4 += 1U)
         {
-          this._vcms.Seek((long)((ulong)(num3 + 0x38U * num4 + 0x34U)), SeekOrigin.Begin);
+          this._vcms.Seek((long)((ulong)(num3 + 0x48U * num4 + 0x44U)), SeekOrigin.Begin);
           uint num5 = (uint)this._vcms.Position + Helpers.ReadUInt(this._vcms);
           this._vcms.Seek((long)((ulong)(num5 - 4U)), SeekOrigin.Begin);
           uint num6 = Helpers.ReadUInt(this._vcms);
@@ -179,14 +181,18 @@ namespace GinsorAudioTool2Plus
       this._voiceEntry.EntryHash = Helpers.ReadUInt(this._vcms);
       this._vcms.Seek(0x14L, SeekOrigin.Current);
       this._voiceEntry.AudioCollectionFileHash = Helpers.ReadUInt(this._vcms);
+            this._vcms.Seek(0xc, SeekOrigin.Current);
       this._voiceEntry.TextRefFileHash = Helpers.ReadUInt(this._vcms);
       this._voiceEntry.TextHash = Helpers.ReadUInt(this._vcms);
       this._voiceEntry.Length = Helpers.ReadFloat(this._vcms);
+            this._vcms.Seek(4, SeekOrigin.Current);
       this._voiceEntry.AudioCollectionFileHash2 = Helpers.ReadUInt(this._vcms);
-      this._voiceEntry.TextRefFileHash2 = Helpers.ReadUInt(this._vcms);
+            this._vcms.Seek(0xc, SeekOrigin.Current);
+            this._voiceEntry.TextRefFileHash2 = Helpers.ReadUInt(this._vcms);
       this._voiceEntry.TextHash2 = Helpers.ReadUInt(this._vcms);
       this._voiceEntry.Length2 = Helpers.ReadFloat(this._vcms);
-      Helpers.InvertUint32(Helpers.ReadUInt(this._vcms));
+            this._vcms.Seek(4, SeekOrigin.Current);
+            Helpers.InvertUint32(Helpers.ReadUInt(this._vcms));
       this._voiceEntry.NarratorHash = Helpers.ReadUInt(this._vcms);
       if (this._voiceEntry.TextRefFileHash != 0xFFFFFFFFU && this._voiceEntry.TextHash != 0xC59D1C81U)
       {
@@ -285,18 +291,18 @@ namespace GinsorAudioTool2Plus
     {
       while (this._vcms.Position < this._vcms.Length)
       {
-        if (Helpers.ReadUInt(this._vcms) == 0x80808D23U)
+        if (Helpers.ReadUInt(this._vcms) == _entryClassHash)
         {
           this.ReadEntry((uint)this._vcms.Position);
         }
       }
     }
 
-    private readonly uint _arrayClassHash = 0x80808D1AU;
+    private readonly uint _arrayClassHash = 0x8080972AU;
 
-    private readonly uint _entryClassHash = 0x80808D23U;
+    private readonly uint _entryClassHash = 0x80809733U;
 
-    private readonly uint _specialClassHash = 0x80808D1DU;
+    private readonly uint _specialClassHash = 0x8080972DU;
 
     private readonly PkgFile _pkgFile;
 

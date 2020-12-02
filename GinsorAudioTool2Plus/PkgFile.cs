@@ -174,16 +174,18 @@ namespace GinsorAudioTool2Plus
 
     public void MakeNonce(ushort packageId)
     {
-      this.Nonce = this._baseNonce;
+
+     this.Nonce = this._baseNonce;
       byte[] nonce = this.Nonce;
       int num = 0;
       nonce[num] ^= (byte)(packageId >> 8 & 0xFF);
       byte[] nonce2 = this.Nonce;
       int num2 = 1;
-      nonce2[num2] ^= 0x26;
+      nonce2[num2] ^= 0x35;
       byte[] nonce3 = this.Nonce;
       int num3 = 0xB;
       nonce3[num3] ^= (byte)(packageId & 0xFF);
+
     }
 
     private void GetPackageId()

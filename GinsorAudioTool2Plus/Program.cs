@@ -16,5 +16,5 @@ namespace GinsorAudioTool2Plus
 
     [DllImport("user32.dll")]
     private static extern bool SetProcessDPIAware();
-  }
+    }
 }
