@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -21,37 +22,37 @@ namespace GinsorAudioTool2Plus
       {
         try
         {
-          switch (num)
-          {
-            case 0:
-              this.ProcessHeader(this._pkgbuffer);
-              num = 1;
-              break;
-            case 1:
-              this.ProcessEntryTable(this._pkgbuffer);
-              num = 2;
-              break;
-            case 2:
-              this.ProcessBlockTable(this._pkgbuffer);
-              num = 3;
-              break;
-            case 3:
-              this.MakeNonce(this.Header.PackageId);
-              num = 4;
-              break;
-            case 4:
-              this.ReadBlock(this._pkgbuffer);
-              num = 5;
-              break;
-            case 5:
-              this.ReadEntries(this._pkgbuffer);
-              num = 7;
-              break;
-            case 7:
-              this._pkgbuffer.Close();
-              num = 0xA;
-              break;
-          }
+                    switch (num)
+                    {
+                        case 0:
+                            this.ProcessHeader(this._pkgbuffer);
+                            num = 1;
+                            break;
+                        case 1:
+                            this.ProcessEntryTable(this._pkgbuffer);
+                            num = 2;
+                            break;
+                        case 2:
+                            this.ProcessBlockTable(this._pkgbuffer);
+                            num = 3;
+                            break;
+                        case 3:
+                            this.MakeNonce(this.Header.PackageId);
+                            num = 4;
+                            break;
+                        case 4:
+                            this.ReadBlock(this._pkgbuffer);
+                            num = 5;
+                            break;
+                        case 5:
+                            this.ReadEntries(this._pkgbuffer);
+                            num = 7;
+                            break;
+                        case 7:
+                            this._pkgbuffer.Close();
+                            num = 0xA;
+                            break;
+                    }
         }
         catch (Exception)
         {
@@ -66,8 +67,13 @@ namespace GinsorAudioTool2Plus
       {
         Version = Helpers.ReadUShort(s),
         Platform = Helpers.ReadUShort(s),
+        blank0 = Helpers.ReadUShort(s),
+        blank1 = Helpers.ReadUShort(s),
+        blank2 = Helpers.ReadUInt(s),
+        blank3 = Helpers.ReadUInt(s),
         PackageId = Helpers.ReadUShort(s),
         Unk0X06 = Helpers.ReadUShort(s),
+        blank4 = Helpers.ReadUInt(s),
         Unk0X08 = Helpers.ReadUInt(s),
         Unk0X0C = Helpers.ReadUInt(s),
         BuildDate = Helpers.ReadUInt(s),
@@ -80,42 +86,22 @@ namespace GinsorAudioTool2Plus
       };
     }
 
-    public void ProcessEntryTable(Stream s)
-    {
-      this.Entries = default(PkgStream.EntryTable);
-      if (this.Header.PkgType != 1)
-      {
-        s.Seek(0xB4L, SeekOrigin.Begin);
-        this.Entries.Size = Helpers.ReadUInt(s);
-        this.Entries.Offset = Helpers.ReadUInt(s);
-        return;
-      }
-      s.Seek(0x110L, SeekOrigin.Begin);
-      uint num = Helpers.ReadUInt(s);
-      s.Seek((long)((ulong)(num + 0x10U)), SeekOrigin.Begin);
-      this.Entries.Size = Helpers.ReadUInt(s);
-      s.Seek(4L, SeekOrigin.Current);
-      uint num2 = Helpers.ReadUInt(s);
-      this.Entries.Offset = num + 0x28U + num2;
-    }
+        public void ProcessEntryTable(Stream s)
+        {
+            this.Entries = default(PkgStream.EntryTable);
+            s.Seek(0x60L, SeekOrigin.Begin);
+            this.Entries.Size = Helpers.ReadUInt(s);
+            this.Entries.Offset = Helpers.ReadUInt(s);
+        }
 
     public void ProcessBlockTable(Stream s)
     {
       this.Blocks = default(PkgStream.BlockTable);
-      if (this.Header.PkgType != 1)
-      {
-        s.Seek(0xD0L, SeekOrigin.Begin);
-        this.Blocks.Size = Helpers.ReadUInt(s);
-        this.Blocks.Offset = Helpers.ReadUInt(s);
-        return;
-      }
-      s.Seek(0x110L, SeekOrigin.Begin);
-      uint num = Helpers.ReadUInt(s);
-      s.Seek((long)((ulong)(num + 0x20U)), SeekOrigin.Begin);
-      this.Blocks.Size = Helpers.ReadUInt(s);
-      s.Seek(4L, SeekOrigin.Current);
-      uint num2 = Helpers.ReadUInt(s);
-      this.Blocks.Offset = num + 0x38U + num2;
+    s.Seek(0x68L, SeekOrigin.Begin);
+    this.Blocks.Size = Helpers.ReadUInt(s);
+    this.Blocks.Offset = Helpers.ReadUInt(s);
+    return;
+
     }
 
     public void MakeNonce(ushort packageId)
@@ -126,7 +112,7 @@ namespace GinsorAudioTool2Plus
       nonce[num] ^= (byte)(packageId >> 8 & 0xFF);
       byte[] nonce2 = this.Nonce;
       int num2 = 1;
-      nonce2[num2] ^= 0x26;
+      nonce2[num2] ^= 0x35;
       byte[] nonce3 = this.Nonce;
       int num3 = 0xB;
       nonce3[num3] ^= (byte)(packageId & 0xFF);
@@ -148,7 +134,7 @@ namespace GinsorAudioTool2Plus
         if ((blockEntry.Flag & 1) != 0)
         {
           blockEntry.Encrypted = true;
-        }
+        } 
         if ((blockEntry.Flag & 2) != 0)
         {
           blockEntry.Compressed = true;
@@ -201,8 +187,7 @@ namespace GinsorAudioTool2Plus
         this.PkgEntryList.Add(pkgEntry);
       }
     }
-
-    public uint CalcBlockCount(uint entryInBlockOffset, uint entrySize)
+        public uint CalcBlockCount(uint entryInBlockOffset, uint entrySize)
     {
       uint num = 0x40000U;
       return (entryInBlockOffset + entrySize + num - 1U) / num;
@@ -263,7 +248,13 @@ namespace GinsorAudioTool2Plus
 
       public ushort Platform;
 
-      public ushort PackageId;
+            public ushort blank0;
+            public ushort blank1;
+            public uint blank2;
+            public uint blank3;
+            public uint blank4;
+
+            public ushort PackageId;
 
       public ushort Unk0X06;
 

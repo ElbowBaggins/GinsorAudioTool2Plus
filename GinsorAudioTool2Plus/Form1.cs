@@ -267,7 +267,7 @@ namespace GinsorAudioTool2Plus
         {
           PkgFile pkgFile = new PkgFile(voiceEntryLtd.AudioCollectionFileHash);
           MemoryStream memoryStream = new MemoryStream(new PkgExtract().ToBuffer(pkgFile));
-          memoryStream.Seek(0x20L, SeekOrigin.Begin);
+          memoryStream.Seek(0x28L, SeekOrigin.Begin);
           uint num = (uint)memoryStream.Position + Helpers.ReadUInt(memoryStream) + 0x10U;
           memoryStream.Seek((long)((ulong)num), SeekOrigin.Begin);
           uint filehashIn = Helpers.ReadUInt(memoryStream);
