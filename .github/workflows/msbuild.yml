@@ -1,4 +1,4 @@
-name: MSBuild
+name: Build Release Package for GinsorAudioTool2
 
 on: [push]
 
