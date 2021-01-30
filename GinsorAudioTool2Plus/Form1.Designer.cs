@@ -1,4 +1,5 @@
-﻿namespace GinsorAudioTool2Plus
+﻿#pragma warning disable 649
+namespace GinsorAudioTool2Plus
 {
 	public partial class Form1 : global::System.Windows.Forms.Form
 	{

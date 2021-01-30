@@ -1,4 +1,5 @@
-﻿using NAudio.Vorbis;
+﻿#pragma warning disable 649
+using NAudio.Vorbis;
 using NAudio.Wave;
 using Newtonsoft.Json;
 using System;
@@ -11,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GinsorAudioTool2Plus.Properties;
-using ww2ogg;
+using WWise;
 
 namespace GinsorAudioTool2Plus
 {
@@ -280,7 +281,7 @@ namespace GinsorAudioTool2Plus
             return;
           }
           memoryStream2.Seek(0L, SeekOrigin.Begin);
-          MemoryStream memoryStream3 = Ww2Ogg.ww2ogg(memoryStream2, new MemoryStream(Resources.CodeBook));
+          MemoryStream memoryStream3 = Converter.ToOgg(memoryStream2, new MemoryStream(Resources.CodeBook));
           memoryStream2.Close();
           MemoryStream memoryStream4 = new MemoryStream(memoryStream3.ToArray());
           MemoryStream revorbedStream = new MemoryStream();

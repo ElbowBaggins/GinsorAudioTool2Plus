@@ -15,16 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ww2ogg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Bit_stream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="codebook.h">
@@ -39,15 +30,15 @@
     <ClInclude Include="wwriff.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Converter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ww2ogg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AssemblyInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="codebook.cpp">
@@ -57,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="crc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Converter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

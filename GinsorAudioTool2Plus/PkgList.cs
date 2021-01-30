@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿#pragma warning disable 649
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;

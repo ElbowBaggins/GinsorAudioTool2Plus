@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <cstdlib>
 #include "errors.h"
-#include "Bit_stream.h"
+#include "Bits.h"
 
 using namespace std;
 
@@ -89,10 +89,10 @@ public:
         return codebook_offsets[i+1]-codebook_offsets[i];
     }
 
-    void rebuild(int i, Bit_oggstream& bos);
+    void rebuild(int i, OggBitStream& bos);
 
-    void rebuild(Bit_stream &bis, unsigned long cb_size, Bit_oggstream& bos);
+    void rebuild(BitStream &bis, unsigned long cb_size, OggBitStream& bos);
 
-    void copy(Bit_stream &bis, Bit_oggstream& bos);
+    void copy(BitStream &bis, OggBitStream& bos);
 };
 #endif

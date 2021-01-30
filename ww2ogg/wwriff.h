@@ -1,86 +1,77 @@
-#ifndef _WWRIFF_H
-#define _WWRIFF_H
+#pragma once
 
-#ifndef __STDC_CONSTANT_MACROS
-#define __STDC_CONSTANT_MACROS
-#endif
-#include <string>
-#include <iostream>
-#include <fstream>
-#include "Bit_stream.h"
+#include "Bits.h"
 #include "stdint.h"
-#include "errors.h"
 
-#define VERSION "0.24"
+#include <string>
 
 using namespace std;
-
-enum ForcePacketFormat {
-    kNoForcePacketFormat,
-    kForceModPackets,
-    kForceNoModPackets
-};
-
-
-class Wwise_RIFF_Vorbis
+namespace WWise
 {
-    string _file_name;
-    string _codebooks_name;
-    istream& _infile;
-    istream& _codebookFile;
-    std::streamoff _file_size;
+    enum ForcePacketFormat {
+        NoForcePacketFormat,
+        ForceModPackets,
+        ForceNoModPackets
+    };
 
-    bool _little_endian;
+    class OggReStreamer
+    {
+        string FileName;
+        string CodebooksName;
+        istream& Infile;
+        istream& CodebookFile;
+        std::streamoff FileSize;
 
-    long _riff_size;
-    long _fmt_offset, _cue_offset, _LIST_offset, _smpl_offset, _vorb_offset, _data_offset;
-    long _fmt_size, _cue_size, _LIST_size, _smpl_size, _vorb_size, _data_size;
+        bool LittleEndian;
 
-    // RIFF fmt
-    uint16_t _channels;
-    uint32_t _sample_rate;
-    uint32_t _avg_bytes_per_second;
+        long RiffSize;
+        long FmtOffset, CueOffset, ListOffset, SmplOffset, VorbOffset, DataOffset;
+        long FmtSize, CueSize, ListSize, SmplSize, VorbSize, DataSize;
 
-    // RIFF extended fmt
-    uint16_t _ext_unk;
-    uint32_t _subtype;
+        // RIFF fmt
+        uint16_t Channels;
+        uint32_t SampleRate;
+        uint32_t AvgBytesPerSecond;
 
-    // cue info
-    uint32_t _cue_count;
+        // RIFF extended fmt
+        uint16_t ExtUnk;
+        uint32_t Subtype;
 
-    // smpl info
-    uint32_t _loop_count, _loop_start, _loop_end;
+        // cue info
+        uint32_t CueCount;
 
-    // vorbis info
-    uint32_t _sample_count;
-    uint32_t _setup_packet_offset;
-    uint32_t _first_audio_packet_offset;
-    uint32_t _uid;
-    uint8_t _blocksize_0_pow;
-    uint8_t _blocksize_1_pow;
+        // smpl info
+        uint32_t LoopCount, LoopStart, LoopEnd;
 
-    const bool _inline_codebooks, _full_setup;
-    bool _header_triad_present, _old_packet_headers;
-    bool _no_granule, _mod_packets;
+        // vorbis info
+        uint32_t SampleCount;
+        uint32_t SetupPacketOffset;
+        uint32_t FirstAudioPacketOffset;
+        uint32_t Uid;
+        uint8_t Blocksize0Pow;
+        uint8_t Blocksize1Pow;
 
-    uint16_t (*_read_16)(std::istream &is);
-    uint32_t (*_read_32)(std::istream &is);
-public:
-    Wwise_RIFF_Vorbis(
-      const string& name,
-      istream& wemStream,
-      const string& _codebooks_name,
-      istream& codebookStream,
-      bool inline_codebooks,
-      bool full_setup,
-      ForcePacketFormat force_packet_format
-      );
+        const bool InlineCodebooks, FullSetup;
+        bool HeaderTriadPresent, OldPacketHeaders;
+        bool NoGranule, ModPackets;
 
-    void print_info(void);
+        uint16_t(*Read16)(std::istream& is);
+        uint32_t(*Read32)(std::istream& is);
+    public:
+        OggReStreamer(
+            const string& name,
+            istream& wemStream,
+            const string& codebooksName,
+            istream& codebookStream,
+            bool inlineCodebooks,
+            bool fullSetup,
+            ForcePacketFormat forcePacketFormat
+        );
 
-    void generate_ogg(ostream& of);
-    void generate_ogg_header(Bit_oggstream& os, bool * & mode_blockflag, int & mode_bits);
-    void generate_ogg_header_with_triad(Bit_oggstream& os);
-};
+        void PrintInfo() const;
 
-#endif
+        void GenerateOgg(ostream& of) const;
+        void GenerateOggHeader(Bits::OggBitStream& os, bool*& modeBlockFlag, int& modeBits) const;
+        void GenerateOggHeaderWithTriad(Bits::OggBitStream& os) const;
+    };
+}

@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <stdio.h>
 #include <ogg/ogg.h>
 #include <vorbis/codec.h>

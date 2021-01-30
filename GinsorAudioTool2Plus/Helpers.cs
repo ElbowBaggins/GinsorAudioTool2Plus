@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable 649
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
