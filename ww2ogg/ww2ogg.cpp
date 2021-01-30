@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <iostream>
 #include <sstream>
 #include "ww2ogg.h"

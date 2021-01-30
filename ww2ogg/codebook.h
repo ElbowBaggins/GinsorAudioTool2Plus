@@ -22,6 +22,15 @@ int ilog(unsigned int v){
   return(ret);
 }
 
+unsigned int uilog(unsigned int v){
+  unsigned int ret=0;
+  while(v){
+    ret++;
+    v>>=1;
+  }
+  return(ret);
+}
+
 unsigned int _book_maptype1_quantvals(unsigned int entries, unsigned int dimensions){
   /* get us a starting hint, we'll polish it below */
   int bits=ilog(entries);

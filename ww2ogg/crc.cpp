@@ -1,4 +1,3 @@
-#include "pch.h"
 #include <stdint.h>
 #include "crc.h"
 

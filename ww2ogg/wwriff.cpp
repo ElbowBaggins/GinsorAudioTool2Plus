@@ -1,4 +1,3 @@
-#include "pch.h"
 #define __STDC_CONSTANT_MACROS
 #include <iostream>
 #include <cstring>

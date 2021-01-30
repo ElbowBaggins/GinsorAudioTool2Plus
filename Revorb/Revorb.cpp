@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <stdio.h>
 #include <ogg/ogg.h>
 #include <vorbis/codec.h>
@@ -170,12 +168,12 @@ int revorb(MemoryStream^ fi, MemoryStream^ fo)
               continue;
             }
 
-            
+
             //if (packet.granulepos >= 0) {
             //  granpos = packet.granulepos + logstream_startgran;
             //  packet.granulepos = granpos;
             //}
-            
+
             int bs = vorbis_packet_blocksize(&vi, &packet);
             if (lastbs)
               granpos += (lastbs+bs) / 4;

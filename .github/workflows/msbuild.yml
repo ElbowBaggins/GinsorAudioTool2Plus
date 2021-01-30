@@ -31,8 +31,27 @@ jobs:
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v1.0.0
+    - name: Bundle
+      run: zip --junk-paths GinsorAudioTool2Plus.zip ${{env.GITHUB_WORKSPACE}}/GinsorAudioTool2Plus/bin/Release/*.exe ${{env.GITHUB_WORKSPACE}}/GinsorAudioTool2Plus/bin/Release/*.dll
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: GinsorAudioTool2Plus
-        path: bin\Release
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: ./GinsorAudioTool2Plus.zip
+        asset_name: GinsorAudioTool2Plus.zip
+        asset_content_type: application/zip

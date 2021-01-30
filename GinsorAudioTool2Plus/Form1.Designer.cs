@@ -193,7 +193,7 @@
       this.statusLabel.Name = "statusLabel";
       this.statusLabel.Size = new System.Drawing.Size(995, 20);
       this.statusLabel.TabIndex = 25;
-      this.statusLabel.Text = "v2.0.1.0 | Invented by Ginsor, Improved by pinky | 2020";
+      this.statusLabel.Text = "v2.0.2.0 | Invented by Ginsor, Improved by pinky | 2021";
       this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // panel7

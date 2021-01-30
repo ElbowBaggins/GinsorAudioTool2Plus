@@ -80,7 +80,7 @@ namespace GinsorAudioTool2Plus
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(52, 16);
       this.label3.TabIndex = 3;
-      this.label3.Text = "v2.0.1.0";
+      this.label3.Text = "v2.0.2.0";
       // 
       // label4
       // 
