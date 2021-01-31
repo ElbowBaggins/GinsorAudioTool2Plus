@@ -2,16 +2,8 @@
 {
 	public partial class Form1 : global::System.Windows.Forms.Form
 	{
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && this.components != null)
-			{
-				this.components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
 
-		private void InitializeComponent()
+    private void InitializeComponent()
 		{
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -331,7 +323,6 @@
 
 		}
 
-		private global::System.ComponentModel.IContainer components;
 
 		private global::System.Windows.Forms.SplitContainer splitContainer1;
 

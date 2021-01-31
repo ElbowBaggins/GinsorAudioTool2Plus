@@ -229,8 +229,6 @@ namespace GinsorAudioTool2Plus
       }
 
       public static readonly Helpers.HashStringToByteArrayHelper2 Helper2 = new Helpers.HashStringToByteArrayHelper2();
-
-      public static Func<int, bool> HelperFunc;
     }
   }
 }

@@ -1,4 +1,4 @@
-﻿using Security.Cryptography;
+﻿
 using System;
 using System.IO;
 using System.Linq;
@@ -156,30 +156,10 @@ namespace GinsorAudioTool2Plus
 
         private byte[] DecryptBuffer(byte[] encryptedInput, byte[] nonce, byte[] gcmtag, int keyinfo)
         {
-            byte[] result;
+            byte[] result = new byte[encryptedInput.Length];
 
-            using (var authenticatedAesCng = new AuthenticatedAesCng())
-            {
-                authenticatedAesCng.CngMode = CngChainingMode.Gcm;
-                if (keyinfo == 1)
-                {
-                    authenticatedAesCng.Key = this._key;
-                }
-                else if (keyinfo == 2)
-                {
-                    authenticatedAesCng.Key = this._altKey;
-                }
-                authenticatedAesCng.IV = nonce;
-                authenticatedAesCng.Tag = gcmtag;
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    using (CryptoStream cryptoStream = new CryptoStream(memoryStream, authenticatedAesCng.CreateDecryptor(), CryptoStreamMode.Write))
-                    {
-                        cryptoStream.Write(encryptedInput, 0, encryptedInput.Length);
-                        cryptoStream.FlushFinalBlock();
-                        result = memoryStream.ToArray();
-                    }
-                }
+            using (var authenticatedAesCng = new AesGcm(keyinfo == 1 ? _key : _altKey)) {
+              authenticatedAesCng.Decrypt(nonce, encryptedInput, gcmtag, result);
             }
             return result;
         }

@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace GinsorAudioTool2Plus
@@ -86,7 +86,11 @@ namespace GinsorAudioTool2Plus
         this.StartProcess();
         Helpers.FileExistsDelete(outputFile);
         Helpers.DirNotExistCreate(Path.GetDirectoryName(outputFile));
-        string contents = JsonConvert.SerializeObject(this._textResults, Formatting.Indented);
+        string contents = JsonSerializer.Serialize<List<TextResult>>(_textResults, new JsonSerializerOptions
+        {
+          IncludeFields = true,
+          WriteIndented = true
+        });
         File.AppendAllText(outputFile, contents);
       }
     }
@@ -186,7 +190,10 @@ namespace GinsorAudioTool2Plus
       }
       Helpers.FileExistsDelete(outputFile);
       Helpers.DirNotExistCreate(Path.GetDirectoryName(outputFile));
-      string contents = JsonConvert.SerializeObject(this._textResults, Formatting.Indented);
+      string contents = JsonSerializer.Serialize<List<TextResult>>(this._textResults, new JsonSerializerOptions() {
+        IncludeFields = true,
+        WriteIndented = true
+      });
       File.AppendAllText(outputFile, contents);
     }
 
@@ -620,10 +627,6 @@ namespace GinsorAudioTool2Plus
       }
 
       public static readonly PkgText.SaveTextHelper0 SaveTextHelperInstance = new PkgText.SaveTextHelper0();
-
-      public static Func<TextResult, string> SaveTextHelperFunc;
-
-      public static Func<TextResult, string> SaveTextHelperFunc2;
     }
 
     [CompilerGenerated]

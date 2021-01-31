@@ -170,26 +170,6 @@ namespace GinsorAudioTool2Plus
     }
 
     [CompilerGenerated]
-    private sealed class Hash2FileHelper2
-    {
-      public Hash2FileHelper2()
-      {
-      }
-
-      internal bool Hash2File0(PkgListEntry c)
-      {
-        return c.PackageId == this.PackageId && (c.LangId == 0 || c.LangId == 1);
-      }
-
-      internal bool Hash2File1(PkgListEntry c)
-      {
-        return c.PackageId == this.PackageId && (c.LangId == 0 || c.LangId == 1);
-      }
-
-      public uint PackageId;
-    }
-
-    [CompilerGenerated]
     private sealed class HashToFileHelper1
     {
       public HashToFileHelper1()

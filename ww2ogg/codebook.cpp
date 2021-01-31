@@ -13,7 +13,7 @@ codebook_library::codebook_library(const string& filename, istream& is)
 
     is.seekg(file_size-4, ios::beg);
     size_t offset_offset = read_32_le(is);
-    codebook_count = (file_size - offset_offset) / 4;
+    codebook_count = static_cast<int>((file_size - offset_offset) / 4);
 
     codebook_data = new char [offset_offset];
     codebook_offsets = new long [codebook_count];

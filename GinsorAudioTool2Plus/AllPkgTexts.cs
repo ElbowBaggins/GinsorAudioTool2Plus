@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace GinsorAudioTool2Plus
@@ -51,36 +51,12 @@ namespace GinsorAudioTool2Plus
       Parallel.ForEach<PkgListEntry>(source, new Action<PkgListEntry>(generateListHelper.GenerateList0));
       List<TextResult> textResults = new PkgText(generateListHelper.PkgStreamList).GetTextResults2();
       Helpers.FileExistsDelete(text);
-      File.WriteAllText(text, JsonConvert.SerializeObject(textResults));
-    }
-
-    [CompilerGenerated]
-    private sealed class GenerateListHelper1
-    {
-      public GenerateListHelper1()
+      
+      File.WriteAllText(text, JsonSerializer.Serialize<List<TextResult>>(textResults, new JsonSerializerOptions
       {
-      }
-
-      internal void GenerateList0(PkgListEntry pkgListEntry)
-      {
-        PkgStream item = PkgStream.PkgStreamFromFile(string.Concat(new string[]
-        {
-          this.D2PkgDir,
-          pkgListEntry.Basename,
-          "_",
-          pkgListEntry.PatchId.ToString(""),
-          ".pkg"
-        }));
-        List<PkgStream> obj = this.PkgStreamList;
-        lock (obj)
-        {
-          this.PkgStreamList.Add(item);
-        }
-      }
-
-      public string D2PkgDir;
-
-      public List<PkgStream> PkgStreamList;
+        IncludeFields = true,
+        WriteIndented = true
+      }));
     }
 
     [CompilerGenerated]

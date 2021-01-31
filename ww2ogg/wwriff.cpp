@@ -579,7 +579,7 @@ void Wwise_RIFF_Vorbis::generate_ogg_header(Bit_oggstream& os, bool * & mode_blo
         os << vhead;
 
         static const char vendor[] = "converted from Audiokinetic Wwise by ww2ogg " VERSION;
-        Bit_uint<32> vendor_size(strlen(vendor));
+        Bit_uint<32> vendor_size(static_cast<unsigned int>(strlen(vendor)));
 
         os << vendor_size;
         for (size_t i = 0; i < vendor_size; i ++) {
@@ -606,7 +606,7 @@ void Wwise_RIFF_Vorbis::generate_ogg_header(Bit_oggstream& os, bool * & mode_blo
             loop_end_str << "LoopEnd=" << _loop_end;
 
             Bit_uint<32> loop_start_comment_length;
-            loop_start_comment_length = loop_start_str.str().length();
+            loop_start_comment_length = static_cast<int>(loop_start_str.str().length());
             os << loop_start_comment_length;
             for (unsigned int i = 0; i < loop_start_comment_length; i++)
             {
@@ -615,7 +615,7 @@ void Wwise_RIFF_Vorbis::generate_ogg_header(Bit_oggstream& os, bool * & mode_blo
             }
 
             Bit_uint<32> loop_end_comment_length;
-            loop_end_comment_length = loop_end_str.str().length();
+            loop_end_comment_length = static_cast<int>(loop_end_str.str().length());
             os << loop_end_comment_length;
             for (unsigned int i = 0; i < loop_end_comment_length; i++)
             {

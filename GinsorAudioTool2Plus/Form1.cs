@@ -1,6 +1,5 @@
 ﻿using NAudio.Vorbis;
 using NAudio.Wave;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GinsorAudioTool2Plus.Properties;
@@ -79,9 +79,11 @@ namespace GinsorAudioTool2Plus
     public async Task LoadPkgList()
     {
       bool flag = File.Exists(Form1.PkglistFile);
-      if (flag)
-      {
-        Form1.PkgListEntries.AddRange(JsonConvert.DeserializeObject<List<PkgListEntry>>(File.ReadAllText(Form1.PkglistFile)));
+      if (flag) {
+        
+        Form1.PkgListEntries.AddRange(JsonSerializer.Deserialize<List<PkgListEntry>>(File.ReadAllText(Form1.PkglistFile), new JsonSerializerOptions() {
+          IncludeFields = true
+        }));
         this.UpdtEventLogger("PKG Database Loaded.");
       }
       else
@@ -98,7 +100,9 @@ namespace GinsorAudioTool2Plus
       bool flag = File.Exists(Form1.AllTextsFile);
       if (flag)
       {
-        Form1.AllTextsDb.AddRange(JsonConvert.DeserializeObject<List<TextResult>>(File.ReadAllText(Form1.AllTextsFile)));
+        Form1.AllTextsDb.AddRange(JsonSerializer.Deserialize<List<TextResult>>(File.ReadAllText(Form1.AllTextsFile), new JsonSerializerOptions() {
+          IncludeFields = true
+        }));
         this.UpdtEventLogger("String Database Loaded.");
       }
       else
@@ -460,13 +464,10 @@ namespace GinsorAudioTool2Plus
         this.treeView1.Visible = false;
         this.treeView1.Nodes.Clear();
         this.treeView1.BeginUpdate();
-        Stream stream = new MemoryStream(Encryption.Decrypt(File.ReadAllBytes(Form1.DefaultJson)));
         this.UpdtEventLogger("Loading Transcript Database... (" + Form1.DefaultJson + ")");
-        using (StreamReader streamReader = new StreamReader(stream))
-        {
-          JsonSerializer jsonSerializer = new JsonSerializer();
-          this._allVoiceListLtd = (List<List<VoiceEntryLtd>>)jsonSerializer.Deserialize(streamReader, typeof(List<List<VoiceEntryLtd>>));
-        }
+        _allVoiceListLtd = JsonSerializer.Deserialize<List<List<VoiceEntryLtd>>>(Encryption.Decrypt(File.ReadAllBytes(Form1.DefaultJson)), new JsonSerializerOptions() {
+          IncludeFields = true
+        });
         int num = 0;
         int num2 = 0;
         narratorListHelper.NarratorList = new List<string>();
@@ -533,7 +534,11 @@ namespace GinsorAudioTool2Plus
       await Task.Run(new Action(generateTranscriptDbHelper.generateTranscriptDbb__1));
       Helpers.FileExistsDelete(Form1.DefaultJson);
       Helpers.DirNotExistCreate(Path.GetDirectoryName(Form1.DefaultJson));
-      string s = JsonConvert.SerializeObject(generateTranscriptDbHelper.AllVoiceListLtdTmp, Formatting.Indented);
+      string s = JsonSerializer.Serialize<List<List<VoiceEntryLtd>>>(generateTranscriptDbHelper.AllVoiceListLtdTmp, new JsonSerializerOptions
+      {
+        IncludeFields = true,
+        WriteIndented = true
+      });
       byte[] bytes = Encoding.UTF8.GetBytes(s);
       File.WriteAllBytes(Form1.DefaultJson, Encryption.Encrypt(bytes));
       this.UpdtEventLogger("Generating Transcript Database completed.");
@@ -580,9 +585,6 @@ namespace GinsorAudioTool2Plus
 
       public static readonly Form1.TextLoader0 Loader0 = new Form1.TextLoader0();
 
-      public static Action Action1;
-
-      public static Action Action2;
     }
 
     [CompilerGenerated]
@@ -810,7 +812,6 @@ namespace GinsorAudioTool2Plus
 
       public static readonly Form1.LoadPkgListHelper000 Inst = new Form1.LoadPkgListHelper000();
 
-      public static Action Act;
     }
 
     [CompilerGenerated]
@@ -823,8 +824,6 @@ namespace GinsorAudioTool2Plus
       }
 
       public static readonly Form1.LoadAllTextsHelper000 Helpinst = new Form1.LoadAllTextsHelper000();
-
-      public static Action Action;
     }
 
     private void Form1_Load(object sender, EventArgs e)

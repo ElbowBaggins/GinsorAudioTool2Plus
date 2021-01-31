@@ -180,7 +180,7 @@ public:
     class Out_of_bits {};
 
     Bit_stream(std::istream& _is) : is(_is), bit_buffer(0), bits_left(0), total_bits_read(0) {
-        if ( std::numeric_limits<unsigned char>::digits != 8)
+        if constexpr ( std::numeric_limits<unsigned char>::digits != 8)
             throw Weird_char_size();
     }
     bool get_bit() {
@@ -222,7 +222,7 @@ public:
 
     Bit_oggstream(std::ostream& _os) :
         os(_os), bit_buffer(0), bits_stored(0), payload_bytes(0), first(true), continued(false), granule(0), seqno(0) {
-        if ( std::numeric_limits<unsigned char>::digits != 8)
+        if constexpr ( std::numeric_limits<unsigned char>::digits != 8)
             throw Weird_char_size();
         }
 

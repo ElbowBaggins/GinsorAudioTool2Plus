@@ -15,14 +15,14 @@ IO::MemoryStream^ ww2ogg::Ww2Ogg::ww2ogg(IO::MemoryStream^ wem, IO::MemoryStream
   string codeBookName = "Destiny 2";
 
   std::stringstream wemStream(std::stringstream::in|std::stringstream::out|std::stringstream::binary);
-  cli::array<unsigned char>^ managedArray = wem->ToArray();
-  char* copy = new char[managedArray->Length];
+  auto managedArray = wem->ToArray();
+  auto copy = new char[managedArray->Length]();
   Marshal::Copy(managedArray, 0, IntPtr(copy), managedArray->Length);
   wemStream.write(copy, managedArray->Length);
 
   std::stringstream codebookStream(std::stringstream::in|std::stringstream::out|std::stringstream::binary);
   cli::array<unsigned char>^ codebookArray = codeBook->ToArray();
-  char* codebookCopy = new char[codebookArray->Length];
+  char* codebookCopy = new char[codebookArray->Length]();
   Marshal::Copy(codebookArray, 0, IntPtr(codebookCopy), codebookArray->Length);
   codebookStream.write(codebookCopy, codebookArray->Length);
 
@@ -42,8 +42,8 @@ IO::MemoryStream^ ww2ogg::Ww2Ogg::ww2ogg(IO::MemoryStream^ wem, IO::MemoryStream
   outStream.seekg(0);
   char* unmanagedResult = new char[length];
   outStream.read(unmanagedResult, length);
-  const auto resultArray = gcnew cli::array<unsigned char>(length);
-  Marshal::Copy(IntPtr(unmanagedResult), resultArray, 0, length);
+  const auto resultArray = gcnew cli::array<unsigned char>(static_cast<int>(length));
+  Marshal::Copy(IntPtr(unmanagedResult), resultArray, 0, static_cast<int>(length));
   const auto result = gcnew IO::MemoryStream(resultArray);
   return result;
 }

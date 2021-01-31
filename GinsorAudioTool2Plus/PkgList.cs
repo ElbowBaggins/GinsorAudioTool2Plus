@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 namespace GinsorAudioTool2Plus
 {
@@ -95,30 +95,14 @@ namespace GinsorAudioTool2Plus
       string text = Form1.RecPkglistfile();
       Helpers.FileExistsDelete(text);
       Helpers.DirNotExistCreate(Path.GetDirectoryName(text));
-      File.WriteAllText(text, JsonConvert.SerializeObject(this.PkgListEntryList));
+      File.WriteAllText(text, JsonSerializer.Serialize<List<PkgListEntry>>(this.PkgListEntryList, new JsonSerializerOptions
+      {
+        IncludeFields = true,
+        WriteIndented = true
+      }));
     }
 
     public List<PkgListEntry> PkgListEntryList = new List<PkgListEntry>();
-
-    [CompilerGenerated]
-    private sealed class GenerateListHelper
-    {
-      public GenerateListHelper()
-      {
-      }
-
-      internal bool GenerateList0(PkgListEntry c)
-      {
-        return c.PackageId == this.PkgListEntry.PackageId && c.LangId == this.PkgListEntry.LangId;
-      }
-
-      internal bool GenerateList1(PkgListEntry c)
-      {
-        return c.PackageId == this.PkgListEntry.PackageId && c.LangId == this.PkgListEntry.LangId;
-      }
-
-      public PkgListEntry PkgListEntry;
-    }
 
     [CompilerGenerated]
     private sealed class GenerateListHelper2
