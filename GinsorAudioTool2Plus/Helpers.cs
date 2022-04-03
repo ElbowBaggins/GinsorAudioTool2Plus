@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace GinsorAudioTool2Plus
 {
@@ -230,5 +231,116 @@ namespace GinsorAudioTool2Plus
 
       public static readonly Helpers.HashStringToByteArrayHelper2 Helper2 = new Helpers.HashStringToByteArrayHelper2();
     }
+        /// <summary>
+        /// A method used to load the hash64 table from a file called "h64"
+        /// </summary>
+        /// <returns>A dictionary which has hash64 values and their 32 bit hashes</returns>
+        public Dictionary<ulong, uint> LoadH64File()
+        {
+            Dictionary<ulong, uint> hash64_table = new Dictionary<UInt64, UInt32>();
+            using (FileStream File = new FileStream("h64", FileMode.Open, FileAccess.Read))
+            {
+                using (BinaryReader BinReader = new BinaryReader(File))
+                {
+                    ulong h64Val;
+                    uint hVal;
+                    byte[] buf = new byte[4];
+                    h64Val = BinReader.ReadUInt64();
+                    hVal = BinReader.ReadUInt32();
+                    hash64_table[h64Val] = hVal;
+                    while (BinReader.BaseStream.Position != BinReader.BaseStream.Length)
+                    {
+                        h64Val = BinReader.ReadUInt64();
+                        hVal = BinReader.ReadUInt32();
+                        hash64_table[h64Val] = hVal;
+                    }
+                }
+            }
+            return hash64_table;
+        }
+
+        /// <summary>
+        /// A method used to save the hash64 table to a file called "h64"
+        /// </summary>
+        /// <param name="hash64_table">The dictionary of hash64s</param>
+        public bool SaveH64File(Dictionary<ulong, uint> hash64_table)
+        {
+            using (FileStream File = new FileStream("h64", FileMode.Create, FileAccess.Write))
+            {
+                using (BinaryWriter BinWriter = new BinaryWriter(File))
+                {
+                    foreach (var element in hash64_table)
+                    {
+                        BinWriter.Write(element.Key);
+                        BinWriter.Write(element.Value);
+                    }
+                }
+                File.Close();
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// A method used to get the table of hash64 values
+        /// </summary>
+        /// <param name="packagesPath">String that points to folder of packages</param>
+        /// <returns>A dictionary which has hash64 values and their 32 bit hashes</returns>
+        public Dictionary<ulong, uint> GenerateH64Table(string packagesPath)
+        {
+            Dictionary<ulong, uint> Hash64Table = new Dictionary<ulong, uint>();
+
+            foreach (string package in Directory.GetFiles(packagesPath))
+            {
+                uint hash64TableOffset;
+                uint hash64TableCount;
+                using (FileStream File = new FileStream(package, FileMode.Open, FileAccess.Read))
+                {
+                    using (BinaryReader BinReader = new BinaryReader(File))
+                    {
+                        File.Seek(0xB8, 0);
+                        hash64TableCount = BinReader.ReadUInt32();
+                        if (hash64TableCount == 0)
+                            continue;
+                        hash64TableOffset = BinReader.ReadUInt32();
+                        hash64TableOffset += 64 + 0x10;
+
+                        for (uint i = hash64TableOffset; i < hash64TableOffset + hash64TableCount * 0x10; i += 0x10)
+                        {
+                            UInt64 h64Val;
+                            File.Seek(i, 0);
+                            h64Val = BinReader.ReadUInt64();
+                            UInt32 hVal;
+                            hVal = BinReader.ReadUInt32();
+                            Hash64Table[h64Val] = hVal;
+                        }
+                    }
+                    File.Close();
+                }
+            }
+            return Hash64Table;
+        }
+        /// <summary>
+        /// A method used to get the hash64 table from either the "h64" file, or the packages if it doesnt exist.
+        /// </summary>
+        /// <returns>A dictionary which has hash64 values and their 32 bit hashes</returns>
+        public Dictionary<ulong, uint> GetH64Table(string pkgsPath)
+        {
+            Dictionary<ulong, uint> hash64_table;
+            if (File.Exists("h64"))
+            {
+                hash64_table = LoadH64File();
+                if (hash64_table.Count < 10000)
+                {
+                    hash64_table = GenerateH64Table(pkgsPath);
+                    SaveH64File(hash64_table);
+                }
+            }
+            else
+            {
+                hash64_table = GenerateH64Table(pkgsPath);
+                SaveH64File(hash64_table);
+            }
+            return hash64_table;
+        }
   }
 }
